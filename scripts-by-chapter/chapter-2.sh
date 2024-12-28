@@ -1,4 +1,5 @@
-./scripts-by-chapter/chapter-1.sh
+
+./chapter-1.sh
 
 echo "***************************************************"
 echo "********* CHAPTER 2 - STARTED AT $(date) **********"
