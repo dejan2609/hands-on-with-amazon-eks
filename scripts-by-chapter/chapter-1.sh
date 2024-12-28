@@ -3,6 +3,8 @@ echo "********* CHAPTER 1 - STARTED AT $(date) **********"
 echo "***************************************************"
 echo "--- This could take around 20 minutes"
 
+./prepare-cloud-shell.sh
+
 # Create the Kubernetes Cluster
     eksctl create cluster -f ../Infrastructure/eksctl/01-initial-cluster/cluster.yaml
 
