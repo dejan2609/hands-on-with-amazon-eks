@@ -1,5 +1,5 @@
-./scripts-by-chapter/chapter-1.sh
-./scripts-by-chapter/chapter-2.sh
+../scripts-by-chapter/chapter-1.sh
+../scripts-by-chapter/chapter-2.sh
 
 echo "***************************************************"
 echo "********* CHAPTER 3 - STARTED AT $(date) **********"
@@ -10,10 +10,10 @@ echo "--- This could take around 10 minutes"
     eksctl utils associate-iam-oidc-provider --cluster=eks-acg --approve
 
 # Create IAM Policies of Bookstore Microservices
-    ( cd clients-api/infra/cloudformation && ./create-iam-policy.sh ) & \
-    ( cd resource-api/infra/cloudformation && ./create-iam-policy.sh ) & \
-    ( cd inventory-api/infra/cloudformation && ./create-iam-policy.sh ) & \
-    ( cd renting-api/infra/cloudformation && ./create-iam-policy.sh ) &
+    ( cd ../clients-api/infra/cloudformation && ./create-iam-policy.sh ) & \
+    ( cd ../resource-api/infra/cloudformation && ./create-iam-policy.sh ) & \
+    ( cd ../inventory-api/infra/cloudformation && ./create-iam-policy.sh ) & \
+    ( cd ../renting-api/infra/cloudformation && ./create-iam-policy.sh ) &
 
     wait
 
@@ -48,10 +48,10 @@ echo "--- This could take around 10 minutes"
     wait
 
 # Upgrading the applications
-    ( cd ./resource-api/infra/helm-v2 && ./create.sh ) & \
-    ( cd ./clients-api/infra/helm-v2 && ./create.sh ) & \
-    ( cd ./inventory-api/infra/helm-v2 && ./create.sh ) & \
-    ( cd ./renting-api/infra/helm-v2 && ./create.sh ) &
+    ( cd ../resource-api/infra/helm-v2 && ./create.sh ) & \
+    ( cd ../clients-api/infra/helm-v2 && ./create.sh ) & \
+    ( cd ../inventory-api/infra/helm-v2 && ./create.sh ) & \
+    ( cd ../renting-api/infra/helm-v2 && ./create.sh ) &
 
     wait
 
@@ -61,14 +61,14 @@ echo "--- This could take around 10 minutes"
     helm del -n kube-system aws-load-balancer-controller # Uninstall first
     aws_load_balancer_iam_policy=$(aws cloudformation describe-stacks --stack aws-load-balancer-iam-policy --query "Stacks[0].Outputs[0]" | jq .OutputValue | tr -d '"')
     aws iam detach-role-policy --role-name ${nodegroup_iam_role} --policy-arn ${aws_load_balancer_iam_policy}
-    ( cd ./Infrastructure/k8s-tooling/load-balancer-controller && ./create-irsa.sh )
+    ( cd ../Infrastructure/k8s-tooling/load-balancer-controller && ./create-irsa.sh )
 
 # Updating IRSA for External DNS
     
     helm del external-dns # Uninstall first
     external_dns_iam_policy="arn:aws:iam::aws:policy/AmazonRoute53FullAccess"
     aws iam detach-role-policy --role-name ${nodegroup_iam_role} --policy-arn ${external_dns_iam_policy}
-    ( cd ./Infrastructure/k8s-tooling/external-dns && ./create-irsa.sh )
+    ( cd ../Infrastructure/k8s-tooling/external-dns && ./create-irsa.sh )
 
 
 # Updating IRSA for VPC CNI
